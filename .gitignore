@@ -1,0 +1,16 @@
+# Keep the separately maintained orchestration prototype out of the study repository.
+prototype/
+
+# Local environments, keys, run output, and caches.
+**/.env
+**/.env.*
+!**/.env.example
+**/.venv/
+**/runs/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+Thumbs.db
+.DS_Store

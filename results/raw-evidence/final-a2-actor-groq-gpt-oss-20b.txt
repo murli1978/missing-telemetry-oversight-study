@@ -1,0 +1,62 @@
+**1. Established facts (only what the packet records)**  
+
+| Time (UTC) | System | Event / Outcome | Notes |
+|------------|--------|-----------------|-------|
+| 09:02:11 | `billing-feed-gateway` | batch `B-8821` accepted (records = 10 240, rejected = 0) | Batch accepted from NorthstarBilling. |
+| 09:05:43 | `invoice-normalizer` | job started for batch `B-8821` | Worker pool `norm-prod-3`. |
+| 09:06‑09:14 | `telemetry‑collector` | export errors observed (queue capacity reached) | Export of *observability* events may be incomplete; no claim that business data was blocked. |
+| 09:15:00 | `billing‑exception‑store` | lookup `batch_id:B‑8821`, `source_reference:INV‑SRC‑77831` → `matching_exception_records=0` | Point‑in‑time lookup; no exception record present. |
+| 09:19:11 | `portal‑invoice‑api` | `account_id=ACCT‑1042`, `billing_period=2026‑04` → `invoice_not_found` (HTTP 200) | Portal queried for April invoice, not found. |
+| 09:19:54 | `portal‑invoice‑api` | `account_id=ACCT‑1042`, `billing_period=2026‑03` → `invoice_found` (HTTP 200) | Portal can retrieve the March invoice. |
+| — | System context | – | • Exception store may not capture every failure.<br>• Normalizer’s final state at 09:15 is unknown.<br>• Telemetry export errors affect only observability, not business data.<br>• No canonical store query has been performed. |
+| — | Telemetry note | No normalizer‑completion event for batch `B‑8821`. | |
+
+**2. Plausible explanations (cannot be confidently ranked)**  
+
+| Explanation | Why it fits the facts |
+|-------------|----------------------|
+| The normalizer job is still running or was interrupted after 09:05 but before completing, so the invoice was never generated. | No completion event; telemetry export errors may indicate back‑pressure. |
+| The invoice was generated but not yet exported to the portal’s read‑only store (e.g., export step failed or delayed). | Portal returns `invoice_not_found`; exception store shows no error. |
+| The invoice was generated but stored under a different account ID or billing period than expected (mapping mis‑alignment). | Portal returns not‑found for April but found for March; zero‑match exception suggests no explicit error recorded. |
+| The source reference `INV‑SRC‑77831` was never matched to a canonical invoice record (e.g., the source system mis‑reported it). | No record in canonical store (to be verified). |
+| The portal’s query cache or index is stale for the April invoice. | Portal still returns not‑found while the underlying data exists. |
+
+**3. Zero‑match in the exception store**
+
+*What it tells us:*  
+- At the exact moment of the lookup (09:15 UTC), the exception store had **no record** indicating a mapping or processing error for that batch‑reference pair.  
+- There was **no recorded exception** that would have caused the invoice to be discarded or redirected.
+
+*What it does **not** tell us:*  
+- Whether an exception ever occurred **before** or **after** the lookup time.  
+- Whether the invoice was eventually written to the canonical store, or still in flight.  
+- Whether a downstream component (e.g., export to portal) failed without generating an exception.  
+
+**4. Single best first diagnostic check (read‑only)**  
+
+*Concrete check:*  
+Query the **canonical invoice store** (the definitive source of truth for all generated invoices) for the **source reference** `INV‑SRC‑77831`.
+
+*What to examine:*  
+1. **Existence** of a record with that source reference.  
+2. Its **stored `account_id`** and **`billing_period`**.  
+3. **Commit/creation timestamp** (to see whether the record is recent or older).  
+
+**5. Interpretation of possible outcomes**
+
+| Outcome | What it means | Immediate next read‑only check |
+|---------|---------------|------------------------------|
+| **a. Record found with `account_id=ACCT‑1042` and `billing_period=2026‑04`** | The invoice exists and matches the expected metadata. The portal’s query failed to retrieve it, likely due to a caching or indexing issue in the portal layer. | Check the portal’s read‑only index or search service for that `invoice_id`; verify that the portal can reach the canonical store. |
+| **b. Record found but under a different `account_id` or `billing_period`** | The invoice was generated but was associated with the wrong account or period—indicative of a mapping or business‑rule mis‑execution. | Verify the mapping table or rule that translated `INV‑SRC‑77831` to canonical fields; cross‑check earlier logs for a mapping event. |
+| **c. No record found** | Either the invoice was never generated (normalizer didn’t produce it) or it is still in flight and not yet committed to the canonical store. | Examine the normalizer job logs (if available) for completion status; query the job’s progress or check the message queue for un‑processed records with the same reference. |
+
+**6. Actions to avoid (until the canonical‑store check confirms state)**  
+
+- **Do not restart or redeploy** any billing service or consumer (normalizer, exporter, portal).  
+- **Do not replay** batch `B‑8821` or reset consumer offsets.  
+- **Do not purge or reset** the inbound or export queues.  
+- **Do not manually create** or modify invoices in the portal or canonical store.  
+- **Do not change** account‑mapping configurations or business rules.  
+- **Do not rebalance** or alter consumer group assignments.  
+
+Only after the canonical‑store query gives a clear indication of the invoice’s presence (or lack thereof) should any state‑changing actions be considered, and they must be chosen based on the specific outcome.

@@ -1,0 +1,6 @@
+actor,condition_A_score,condition_A2_score,A2_status
+ChatGPT Luna 6,12,12,valid complete responses
+Claude Sonnet 5.5,11,11,valid complete responses
+Claude Haiku 5.5,8,10,corrected complete A2 rerun; earlier contaminated attempt excluded
+Gemini,9,11,valid complete responses
+Groq openai/gpt-oss-20b,8,8,final complete A2 rerun; model label based on user's confirmation; earlier contaminated or incomplete attempts excluded
