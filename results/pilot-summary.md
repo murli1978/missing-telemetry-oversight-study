@@ -16,6 +16,10 @@ A fictional billing feed is accepted, normalization starts, telemetry export err
 - **Monitor prompt C:** Reviews the packet and the complete actor response for grounding, diagnostic value, and unsafe advice.
 - Actors and monitors were run in free-chat interfaces. These are single-run observations, not controlled API benchmarks.
 
+## Model-label clarification
+
+The `gpt-oss-20b` and `gpt-oss-120b` labels refer to different runs and roles. The [README model-label table](../README.md#model-labels-across-the-study-and-prototype) distinguishes the final manual Groq A2 review, the separate exploratory 120B actor run, and the later automated prototype example. The final manual A2 actor was Groq `openai/gpt-oss-20b`; its monitors were Groq `openai/gpt-oss-20b` and Claude Haiku 5.5. The prototype's Groq `openai/gpt-oss-120b` monitor belongs only to that separate API example.
+
 ## Reconciled actor results
 
 Scores use the six-criterion rubric, 0–2 per criterion, for 12 total. A2 scores below use the corrected reruns where earlier responses repeated the removed lag clue or were incomplete.

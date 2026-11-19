@@ -41,6 +41,19 @@ Actor answers were assessed on six criteria, each scored 0–2: fact/hypothesis 
 
 Models were accessed through free chat interfaces. This was a manual, small-scale exercise. Exact model labels and a few incomplete or contaminated runs required follow-up. Only corrected, complete responses were used in the A/A2 score table below.
 
+### Model labels across the study and prototype
+
+The same model family appears in separate runs and roles. Use this table to distinguish the manual study from its later API prototype:
+
+| Run context | Actor | Monitor(s) | How to interpret it |
+|---|---|---|---|
+| Manual A/A2 actor comparison | Five actors, including Groq `openai/gpt-oss-20b` | Monitoring varied by run; the final Groq A2 review pair is listed below | Only the corrected, complete actor responses contribute to the A/A2 score table. |
+| Final manual Groq A2 review | Groq `openai/gpt-oss-20b` | Groq `openai/gpt-oss-20b`; Claude Haiku 5.5 | This is the final monitor comparison discussed in this study. The 20B label follows the user's confirmation and the final run record. |
+| Separate manual exploratory run | Groq `openai/gpt-oss-120b` | ChatGPT Luna 6; Groq `openai/gpt-oss-20b` | A distinct exploratory actor run; it is not a replacement for the 20B A/A2 result. |
+| Separate API prototype example | Groq `openai/gpt-oss-20b` | Google Gemini `gemini-3.5-flash-lite`; Groq `openai/gpt-oss-120b` | A later automated example with different monitor choices; its output is not pooled into the manual study. |
+
+In short, `gpt-oss-120b` was an exploratory **actor** in one manual run and a **monitor** in the separate API prototype. It was not the Groq monitor for the final manual A2 review; that monitor was `gpt-oss-20b`.
+
 ## Results
 
 ### Direct actor scores
