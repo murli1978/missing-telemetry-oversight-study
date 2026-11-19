@@ -18,7 +18,7 @@ A fictional billing feed is accepted, normalization starts, telemetry export err
 
 ## Model-label clarification
 
-The `gpt-oss-20b` and `gpt-oss-120b` labels refer to different runs and roles. The [README model-label table](../README.md#model-labels-across-the-study-and-prototype) distinguishes the final manual Groq A2 review, the separate exploratory 120B actor run, and the later automated prototype example. The final manual A2 actor was Groq `openai/gpt-oss-20b`; its monitors were Groq `openai/gpt-oss-20b` and Claude Haiku 5.5. The prototype's Groq `openai/gpt-oss-120b` monitor belongs only to that separate API example.
+The `gpt-oss-20b` and `gpt-oss-120b` labels refer to different runs and roles. The [README model-label table](../README.md#model-labels-across-the-study-and-prototype) distinguishes the final manual Groq A2 review, the separate exploratory 120B actor run, and the later automated prototype example. The final manual A2 actor was Groq `openai/gpt-oss-20b`; its monitors were Groq `openai/gpt-oss-20b` and Claude Haiku 5.5. The separate manual 120B exploratory actor run was monitored by ChatGPT Luna 6 and Groq `openai/gpt-oss-120b`. The prototype's Groq `openai/gpt-oss-120b` monitor belongs only to that separate API example.
 
 ## Reconciled actor results
 
@@ -45,6 +45,8 @@ Monitor reviews were not treated as ground truth. In the latest complete Groq A2
 
 Across the pilot, monitors sometimes missed unsupported batch-order assumptions, telemetry/data-path conflation, unsafe refresh or replay suggestions, and incomplete actor outputs. Some monitors also invented or misquoted details. The monitor's verdict therefore needs its own evidence audit.
 
+**Same-model review limitation:** In the final Groq A2 pair, the actor and Groq monitor were both `gpt-oss-20b`. The monitor reviewed an answer from the same model, so this comparison may reflect self-review bias rather than independent oversight.
+
 ## Main conclusions
 
 1. The prompt and evidence variation surfaced useful failure modes: models can mistake missing telemetry for evidence about business processing, overread a point-in-time exception lookup, infer system relationships not in the packet, or recommend changes before state is verified.
@@ -58,4 +60,4 @@ Present this as a small, reproducible oversight study, not as a claim that one m
 
 ## Run-record note
 
-The final Groq A2 actor text is complete through section 6. The user confirmed the actor was run on `gpt-oss-20b`. The preserved final monitor file labels the two monitors as Groq `gpt-oss-20b` and Claude Haiku 5.5. A separate `gpt-oss-120b` exploratory run is not merged into this result. The source copies are preserved unchanged under `results/raw-evidence/`.
+The final Groq A2 actor text is complete through section 6. The final run record identifies the actor as `gpt-oss-20b`; the preserved monitor file identifies the two monitors as Groq `gpt-oss-20b` and Claude Haiku 5.5. A separate `gpt-oss-120b` exploratory run is not merged into this result. The source copies are preserved unchanged under `results/raw-evidence/`.

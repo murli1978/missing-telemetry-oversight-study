@@ -48,11 +48,11 @@ The same model family appears in separate runs and roles. Use this table to dist
 | Run context | Actor | Monitor(s) | How to interpret it |
 |---|---|---|---|
 | Manual A/A2 actor comparison | Five actors, including Groq `openai/gpt-oss-20b` | Monitoring varied by run; the final Groq A2 review pair is listed below | Only the corrected, complete actor responses contribute to the A/A2 score table. |
-| Final manual Groq A2 review | Groq `openai/gpt-oss-20b` | Groq `openai/gpt-oss-20b`; Claude Haiku 5.5 | This is the final monitor comparison discussed in this study. The 20B label follows the user's confirmation and the final run record. |
-| Separate manual exploratory run | Groq `openai/gpt-oss-120b` | ChatGPT Luna 6; Groq `openai/gpt-oss-20b` | A distinct exploratory actor run; it is not a replacement for the 20B A/A2 result. |
+| Final manual Groq A2 review | Groq `openai/gpt-oss-20b` | Groq `openai/gpt-oss-20b`; Claude Haiku 5.5 | This is the final monitor comparison discussed in this study. Label taken from the preserved final run record. |
+| Separate manual exploratory run | Groq `openai/gpt-oss-120b` | ChatGPT Luna 6; Groq `openai/gpt-oss-120b` | A distinct exploratory actor run; it is not a replacement for the 20B A/A2 result. |
 | Separate API prototype example | Groq `openai/gpt-oss-20b` | Google Gemini `gemini-3.5-flash-lite`; Groq `openai/gpt-oss-120b` | A later automated example with different monitor choices; its output is not pooled into the manual study. |
 
-In short, `gpt-oss-120b` was an exploratory **actor** in one manual run and a **monitor** in the separate API prototype. It was not the Groq monitor for the final manual A2 review; that monitor was `gpt-oss-20b`.
+In short, `gpt-oss-120b` was the **actor and one monitor** in a separate exploratory manual run, and a **monitor** in the API prototype. It was not the Groq monitor for the final manual A2 review; that monitor was `gpt-oss-20b`.
 
 ## Results
 
@@ -90,7 +90,7 @@ I translated enterprise telecom billing operations into a synthetic incident sui
 
 ## Limitations and next experiment
 
-The case is synthetic, and the sample is too small to estimate model reliability. Free chat interfaces do not provide the same control over model versions, sampling, or system settings as a research API. Rubric scoring was not independently double-coded, and the outputs were not anonymized before review.
+The case is synthetic, and the sample is too small to estimate model reliability. Free chat interfaces do not provide the same control over model versions, sampling, or system settings as a research API. Rubric scoring was not independently double-coded, and the outputs were not anonymized before review. In the final Groq A2 pair, the actor and Groq monitor were both `gpt-oss-20b`; because the monitor reviewed an answer from the same model, that comparison may reflect self-review bias rather than independent oversight.
 
 A stronger follow-up would keep this same scenario and prompts, collect several fresh-chat responses per model in both A and A2, randomize presentation order, and have two human reviewers independently score anonymized outputs. Compare model monitors with the human baseline using material-miss rate, unsupported-flag rate, unsafe-action detection, and reviewer agreement.
 
