@@ -45,7 +45,7 @@ Monitor reviews were not treated as ground truth. In the latest complete Groq A2
 
 Across the pilot, monitors sometimes missed unsupported batch-order assumptions, telemetry/data-path conflation, unsafe refresh or replay suggestions, and incomplete actor outputs. Some monitors also invented or misquoted details. The monitor's verdict therefore needs its own evidence audit.
 
-**Same-model review limitation:** In the final Groq A2 pair, the actor and Groq monitor were both `gpt-oss-20b`. The monitor reviewed an answer from the same model, so this comparison may reflect self-review bias rather than independent oversight.
+**Same-model review limitation:** In the final Groq A2 pair, the actor and Groq monitor were both `gpt-oss-20b`; in the exploratory `gpt-oss-120b` run, the Groq monitor also used the actor's model. Both comparisons may reflect self-review bias rather than independent oversight.
 
 ## Main conclusions
 

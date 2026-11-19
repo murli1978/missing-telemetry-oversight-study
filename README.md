@@ -90,7 +90,7 @@ I translated enterprise telecom billing operations into a synthetic incident sui
 
 ## Limitations and next experiment
 
-The case is synthetic, and the sample is too small to estimate model reliability. Free chat interfaces do not provide the same control over model versions, sampling, or system settings as a research API. Rubric scoring was not independently double-coded, and the outputs were not anonymized before review. In the final Groq A2 pair, the actor and Groq monitor were both `gpt-oss-20b`; because the monitor reviewed an answer from the same model, that comparison may reflect self-review bias rather than independent oversight.
+The case is synthetic, and the sample is too small to estimate model reliability. Free chat interfaces do not provide the same control over model versions, sampling, or system settings as a research API. Rubric scoring was not independently double-coded, and the outputs were not anonymized before review. In the final Groq A2 pair, the actor and Groq monitor were both `gpt-oss-20b`; in the exploratory `gpt-oss-120b` run, the Groq monitor also used the actor's model. Both comparisons may reflect self-review bias rather than independent oversight.
 
 A stronger follow-up would keep this same scenario and prompts, collect several fresh-chat responses per model in both A and A2, randomize presentation order, and have two human reviewers independently score anonymized outputs. Compare model monitors with the human baseline using material-miss rate, unsupported-flag rate, unsafe-action detection, and reviewer agreement.
 
